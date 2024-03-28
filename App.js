@@ -3,12 +3,13 @@
  * Author:  Jesse Van Schothorst
  * Brief:   App will allow us to play with a digipet
  */
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, Pressable, stylessheet, ImageBackground, StatusBar, Alert } from 'react-native';
 import { Audio } from 'expo-av';
+import * as FileSystem from 'expo-file-system';
 
 // all from components
-import SaveButton from './components/saveButton';
+
 import Stars from './components/stars';
 import HappinessBar from './components/happiness';
 
@@ -42,20 +43,6 @@ export default function App() {
     const [happinessLevel, setHappinessLevel] = useState(100);
     const [starDied, setStarDied] = useState(false);
     const [starDiedAlert, setStarDiedAlert] = useState(false); // Add state to track if alert has been shown
-
-
-    const [starState, setStarState] = useState({
-        starNumber: 2,
-        happinessLevel: 100,
-        starDied: false,
-        starDiedAlert: false
-    });
-
-    // Function to update star state
-    const updateStarState = (newState) => {
-        setStarState(newState);
-    };
-
 
 
     const beHappier = () => {
@@ -117,12 +104,83 @@ export default function App() {
     }, [starDied, starDiedAlert]);
 
 
+
+
+
+    // data saving stuff
+    const dataFileName = 'datafile.json';
+
+    /**
+     * This function will load a json string of all the saved data 
+     * We assume that the file is good
+     * We assume that all the required object parts are present
+     */
+    const loadState = async () => {
+        try {
+            // get the string
+            const currentStateString = await FileSystem.readAsStringAsync(
+                FileSystem.documentDirectory + dataFileName
+            );
+            // convert it to an object
+            const currentState = JSON.parse(currentStateString);
+            // extract all the saved states
+            setStarNumber(currentState.starNumber);
+             setHappinessLevel(currentState.happinessLevel);
+             setStarDied(currentState.starDied);
+             setStarDiedAlert(currentState.starDiedAlert);
+        } catch (e) {
+            console.log(FileSystem.documentDirectory + dataFileName + e);
+            // probably there wasn't a saved state, so make one for next time?
+            saveState();
+        }
+    }
+
+    /**
+     * This function will save the data as a json string 
+     */
+    const saveState = async () => {
+        // build an object of everything we are saving
+        const currentState = {
+            starNumber: starNumber, // Add starNumber to save
+            happinessLevel: happinessLevel, // Add happinessLevel to save
+            starDied: starDied, // Add starDied to save
+            starDiedAlert: starDiedAlert // Add starDiedAlert to save
+        };
+        try {
+            // write the stringified object to the save file
+            await FileSystem.writeAsStringAsync(
+                FileSystem.documentDirectory + dataFileName,
+                JSON.stringify(currentState)
+            );
+        } catch (e) {
+            console.log(FileSystem.documentDirectory + dataFileName + e);
+        }
+    }
+
+    // load on app load, save on app unload
+    useEffect(() => {
+        loadState();
+        return () => { saveState() }; // Add parentheses to invoke saveState function
+    }, [])
+
+
+
     return (
         <ImageBackground source={require('./assets/images/star-background.gif')} style={styles.background}>
             <View style={styles.container}>
                 {/* Header w/ Save in top right */}
                 <View style={styles.header}>
-                    <SaveButton />
+                    <Pressable
+                        style={({ pressed }) => [
+                            styles.saveButton,
+                            { backgroundColor: pressed ? '#0056b3' : '#007bff' }
+                        ]}
+                        onPress={saveState}
+                        android_ripple={{ color: '#fff' }}
+                        ios_ripple={{ color: '#fff' }}
+                    >
+                        <Text style={styles.saveButtonText}>Save</Text>
+                    </Pressable>
                 </View>
 
                 <View style={styles.moodContainer}>
@@ -132,12 +190,11 @@ export default function App() {
                 {/* The Star Digipet */}
                 <View style={styles.digipetContainer}>
                     <Pressable onPress={beHappier}>
-                        <Stars starNumber={starNumber} /> 
+                        <Stars starNumber={starNumber} />
                     </Pressable>
                 </View>
 
                 {/* Inventory options/options to do with star */}
-                {/* You can add more components here as needed */}
 
                 <StatusBar style="dark" />
             </View>

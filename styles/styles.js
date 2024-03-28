@@ -36,12 +36,6 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         marginBottom: 20,
     },
-    moodBox: {
-        width: '30%',
-        backgroundColor: '#f0f0f0',
-        padding: 10,
-        borderRadius: 5,
-    },
     moodText: {
         textAlign: 'center',
         color: '#333',
@@ -55,6 +49,9 @@ const styles = StyleSheet.create({
         height: 250,
         resizeMode: 'contain',
     },
+
+
+
     inventoryOptionsContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -70,6 +67,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#333',
     },
+
+
+
     gameOverText: {
         fontSize: 24,
         fontWeight: 'bold',
