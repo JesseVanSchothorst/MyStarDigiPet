@@ -33,3 +33,4 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+/.vs/MyStarDigiPet/FileContentIndex/193b37d2-625e-4157-ae34-6ccf42b04a4e.vsidx
