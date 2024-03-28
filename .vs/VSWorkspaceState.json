@@ -1,7 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\components",
+    "\\styles"
   ],
-  "SelectedNode": "\\App.js",
+  "SelectedNode": "\\components\\saveButton.js",
   "PreviewInSolutionExplorer": false
 }
