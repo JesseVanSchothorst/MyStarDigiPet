@@ -28,7 +28,17 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
     },
+    petButton: {
+        backgroundColor: '#007bff',
+        padding: 30,
+        borderRadius: 5,
+    },
     saveButtonText: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    anotherButtonText: {
+        fontSize:56,
         color: '#fff',
         fontWeight: 'bold',
     },

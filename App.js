@@ -84,6 +84,7 @@ export default function App() {
     // could add more food options but for now basic food
     const buyFood = () => {
         if (money > 0) {
+            playBuySound();
             setMoney(prevLevel => Math.max(prevLevel - 10, 0));
             setFoodQuantity(prevLevel => Math.min(prevLevel + 1, 500));
         }
@@ -123,7 +124,35 @@ export default function App() {
         return () => clearTimeout(timeout);
     }, [happinessLevel, starDied]); 
 
-
+    // could be put together better
+    let eatSound = new Audio.Sound();
+    useEffect(() => {
+        return () => {
+            eatSound.unloadAsync();
+        };
+    }, []);
+    const playEatSound = async () => {
+        try {
+            await eatSound.loadAsync(require('./assets/sounds/eating.mp3'));
+            await eatSound.playAsync();
+        } catch (error) {
+            console.log('Error playing sound:', error);
+        }
+    };    // could be put together better
+    let buySound = new Audio.Sound();
+    useEffect(() => {
+        return () => {
+            buySound.unloadAsync();
+        };
+    }, []);
+    const playBuySound = async () => {
+        try {
+            await buySound.loadAsync(require('./assets/sounds/buy.mp3'));
+            await buySound.playAsync();
+        } catch (error) {
+            console.log('Error playing sound:', error);
+        }
+    };
 
     // could be put together better
     let deadSound = new Audio.Sound();
@@ -178,6 +207,7 @@ export default function App() {
             if (hungerLevel === 30) {
                 setStarNumber(1);
             }
+            playEatSound();
         }
     };
     const beHungry = () => {
@@ -332,48 +362,6 @@ export default function App() {
 
 
 
-// Inspired by Classmate Alex Pham
-    const spinAnimation = () => {
-        // Choose a random animation
-        const animations = [
-            withTiming(360, { duration: 2000 }),
-            withTiming(180, { duration: 2000 }),
-            withTiming(540, { duration: 2000 }),
-            withTiming(-360, { duration: 2000 }),
-        ];
-        // Select a random animation from the list
-        const randomIndex = Math.floor(Math.random() * animations.length);
-        const selectedAnimation = animations[randomIndex];
-        rotateValue.value = selectedAnimation;
-    };
-    const rotateValue = useSharedValue(0);
-    const animatedStyle2 = useAnimatedStyle(() => {
-        return {
-            transform: [{ rotate: `${rotateValue.value}deg` }],
-        };
-    });
-
-    const spin = async () => {
-        setHappinessLevel((prevHappiness) => Math.min(prevHappiness + 10, 100)); // Increase happiness
-        playStarSound();
-        Vibration.vibrate(120);
-
-        // Trigger random animation
-        spinAnimation();
-    };
-
-
-    const handleGestureEvent = (event) => {
-        if (event.nativeEvent.state === State.ACTIVE) {
-            // Perform actions based on gesture
-            spin(); // Example: petting the pet
-        }
-    };
-
-
-
-
-
     // load on app load, save on app unload
     useEffect(() => {
         loadState();
@@ -418,7 +406,7 @@ export default function App() {
                     </Pressable>
                     <Text style={styles.saveButtonText}>My Little Pet</Text>
                     <TextInput
-                        style={{ width: '20%' }, styles.saveButtonText}
+                        style={{ width: '20%'}, styles.saveButtonText}
                         onChangeText={setName}
                         value={name}
                         placeholder="useless placeholder"
@@ -430,14 +418,14 @@ export default function App() {
 
                 {/* The Star Digipet */}
                 <View style={styles.digipetContainer}>
-                    <Animated.View style={animatedStyle, animatedStyle2}>
+                    <Animated.View style={animatedStyle}>
                         <Pressable onPress={wobble}>
                             <Stars starNumber={starNumber} />
                         </Pressable>
                     </Animated.View>
                 </View>
                 <View>
-                    <Text style={styles.saveButtonText}>${money}</Text>
+                    <Text style={styles.anotherButtonText  }>${money}</Text>
                  </View>
                 <View style={styles.moodContainer}>
                     <Text style={styles.buttonText}>Happy </Text>
@@ -455,7 +443,7 @@ export default function App() {
                 <View style={styles.header}>
                     <Pressable
                         style={({ pressed }) => [
-                            styles.saveButton,
+                            styles.petButton,
                             { backgroundColor: pressed ? '#0056b3' : '#007bff' }
                         ]}
                         onPress={
@@ -470,7 +458,7 @@ export default function App() {
 
                     <Pressable
                         style={({ pressed }) => [
-                            styles.saveButton,
+                            styles.petButton,
                             { backgroundColor: pressed ? '#0056b3' : '#007bff' }
                         ]}
                         onPress={beFuller}
@@ -482,14 +470,14 @@ export default function App() {
 
                     <Pressable
                         style={({ pressed }) => [
-                            styles.saveButton,
+                            styles.petButton,
                             { backgroundColor: pressed ? '#0056b3' : '#007bff' }
                         ]}
                         onPress={buyFood}
                         android_ripple={{ color: '#fff' }}
                         ios_ripple={{ color: '#fff' }}
                     >
-                        <Text style={styles.saveButtonText}>Buy Food</Text>
+                        <Text style={styles.saveButtonText}>Buy Food ($10)</Text>
                     </Pressable>
                 </View>
 
