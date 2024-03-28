@@ -12,6 +12,7 @@ import * as FileSystem from 'expo-file-system';
 
 import Stars from './components/stars';
 import HappinessBar from './components/happiness';
+import HungerBar from './components/hunger';
 
 import styles from './styles/styles.js';
 
@@ -41,6 +42,7 @@ export default function App() {
     // Happiness stuff
     const [starNumber, setStarNumber] = useState(2);
     const [happinessLevel, setHappinessLevel] = useState(100);
+    const [hungerLevel, setHungerLevel] = useState(100);
     const [starDied, setStarDied] = useState(false);
     const [starDiedAlert, setStarDiedAlert] = useState(false); // Add state to track if alert has been shown
 
@@ -48,42 +50,84 @@ export default function App() {
     const beHappier = () => {
         if (starNumber < 3) {
             setHappinessLevel(prevLevel => Math.min(prevLevel + 10, 100));
-            if (happinessLevel === 80 && starNumber < 2) {
+            if (happinessLevel === 20 && starNumber < 1 || happinessLevel === 70 && starNumber < 2) {
                 setStarNumber(oldStar => oldStar + 1);
             }
         }
     };
-
     const beSadder = () => {
-        if (starNumber > 0 && !starDied) {
+        if (starNumber > -1 && !starDied) {
             setHappinessLevel(prevLevel => Math.max(prevLevel - 10, 0));
-            if (happinessLevel === 80) {
+            if (happinessLevel === 80 || happinessLevel === 20) {
                 setStarNumber(oldStar => oldStar - 1);
             }
         }
     };
-
     useEffect(() => {
         const timeout = setTimeout(() => {
-            if (!starDied) {
                 beSadder();
-            }
         }, 2000);
         return () => clearTimeout(timeout);
     }, [happinessLevel, starDied]); // Include starDied in the dependency array
 
+
+    let sound = new Audio.Sound();
     useEffect(() => {
-        if (happinessLevel === 0 && !starDied) {
-            setStarNumber(oldStar => oldStar - 1);
+        return () => {
+            sound.unloadAsync(); // Unload the sound when the component unmounts
+        };
+    }, []);
+    const playSound = async () => {
+        try {
+            await sound.loadAsync(require('./assets/sounds/oof.mp3'));
+            await sound.playAsync();
+        } catch (error) {
+            console.log('Error playing sound:', error);
+        }
+    };
+
+
+
+
+
+
+    const beFuller = () => {
+        if (starNumber < 3) {
+            setHungerLevel(prevLevel1 => Math.min(prevLevel1 + 10, 100));
+            if (hungerLevel === 30) {
+                setStarNumber(1);
+            }
+        }
+    };
+    const beHungry = () => {
+        if (starNumber > -1 && !starDied) {
+            setHungerLevel(prevLevel1 => Math.max(prevLevel1 - 10, 0));
+            if (hungerLevel === 20) {
+                setStarNumber(3);
+            }
+        }
+    };
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            beHungry();
+        }, 1000);
+        return () => clearTimeout(timeout);
+    }, [hungerLevel, starDied]); 
+
+    useEffect(() => {
+        if (hungerLevel === 0 && !starDied) {
+            setStarNumber(4);
             setStarDied(true);
+            playSound();
         }
     }, [happinessLevel, starDied]);
 
     const restartGame = () => {
         setHappinessLevel(100);
+        setHungerLevel(100);
         setStarNumber(2);
         setStarDied(false);
-        setStarDiedAlert(false); // Reset alertShown state
+        setStarDiedAlert(false); 
     };
 
     useEffect(() => {
@@ -125,7 +169,8 @@ export default function App() {
             const currentState = JSON.parse(currentStateString);
             // extract all the saved states
             setStarNumber(currentState.starNumber);
-             setHappinessLevel(currentState.happinessLevel);
+            setHappinessLevel(currentState.happinessLevel);
+            setHungerLevel(currentState.hungerLevel);
              setStarDied(currentState.starDied);
              setStarDiedAlert(currentState.starDiedAlert);
         } catch (e) {
@@ -141,7 +186,8 @@ export default function App() {
     const saveState = async () => {
         // build an object of everything we are saving
         const currentState = {
-            starNumber: starNumber, // Add starNumber to save
+            hungerLevel: hungerLevel,
+            starNumber: starNumber, 
             happinessLevel: happinessLevel, // Add happinessLevel to save
             starDied: starDied, // Add starDied to save
             starDiedAlert: starDiedAlert // Add starDiedAlert to save
@@ -187,6 +233,10 @@ export default function App() {
                     <HappinessBar happinessLevel={happinessLevel} />
                 </View>
 
+                <View style={styles.moodContainer}>
+                    <HungerBar hungerLevel={hungerLevel} />
+                </View>
+
                 {/* The Star Digipet */}
                 <View style={styles.digipetContainer}>
                     <Pressable onPress={beHappier}>
@@ -195,6 +245,31 @@ export default function App() {
                 </View>
 
                 {/* Inventory options/options to do with star */}
+                <View style={styles.header}>
+                    <Pressable
+                        style={({ pressed }) => [
+                            styles.saveButton,
+                            { backgroundColor: pressed ? '#0056b3' : '#007bff' }
+                        ]}
+                        onPress={beHappier}
+                        android_ripple={{ color: '#fff' }}
+                        ios_ripple={{ color: '#fff' }}
+                    >
+                        <Text style={styles.saveButtonText}>Play</Text>
+                    </Pressable>
+
+                    <Pressable
+                        style={({ pressed }) => [
+                            styles.saveButton,
+                            { backgroundColor: pressed ? '#0056b3' : '#007bff' }
+                        ]}
+                        onPress={beFuller}
+                        android_ripple={{ color: '#fff' }}
+                        ios_ripple={{ color: '#fff' }}
+                    >
+                        <Text style={styles.saveButtonText}>Feed</Text>
+                    </Pressable>
+                </View>
 
                 <StatusBar style="dark" />
             </View>
