@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, View } from 'react-native';
 import styles from '../styles/styles.js';
 
+// got image from web then modified them to my own thing
 const stars = [
     require('../assets/images/star-angry.png'),
     require('../assets/images/star-blank.png'),
