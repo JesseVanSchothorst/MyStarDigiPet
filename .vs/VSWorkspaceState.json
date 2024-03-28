@@ -1,9 +1,12 @@
 {
   "ExpandedNodes": [
     "",
+    "\\assets",
+    "\\assets\\images",
+    "\\assets\\sounds",
     "\\components",
     "\\styles"
   ],
-  "SelectedNode": "\\components\\saveButton.js",
+  "SelectedNode": "\\assets\\images\\star-background.gif",
   "PreviewInSolutionExplorer": false
 }

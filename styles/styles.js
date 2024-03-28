@@ -6,9 +6,14 @@
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
+    background: {
+        flex: 1,
+        resizeMode: 'cover',
+        justifyContent: 'center', 
+        alignItems: 'center', 
+    },
     container: {
         flex: 1,
-        backgroundColor: '#F5FCFF',
         padding: 20,
     },
     header: {
@@ -46,8 +51,8 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     digipetImage: {
-        width: 150,
-        height: 150,
+        width: 250,
+        height: 250,
         resizeMode: 'contain',
     },
     inventoryOptionsContainer: {
@@ -64,6 +69,23 @@ const styles = StyleSheet.create({
     inventoryOptionText: {
         textAlign: 'center',
         color: '#333',
+    },
+    gameOverText: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20,
+        textAlign: 'center',
+    },
+    restartButton: {
+        backgroundColor: '#007bff', 
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: '#fff', 
+        fontSize: 18,
+        fontWeight: 'bold',
     },
 });
 

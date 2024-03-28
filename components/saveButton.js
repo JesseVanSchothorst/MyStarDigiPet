@@ -1,7 +1,7 @@
 /**
  * File:    saveButton.js
  * Author:  Jesse Van Schothorst
- * Brief:   App will allow us to play with a digipet
+ * Brief:   saves button mostly inspired by stephen
  */
 import { Button, StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
 import * as FileSystem from 'expo-file-system';
