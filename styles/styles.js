@@ -18,9 +18,10 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        gap: 20,
         alignItems: 'center',
-        marginBottom: 20,
+        marginBottom: 10,
+        backgroundColor: '#0#f0f27e07bff',
     },
     saveButton: {
         backgroundColor: '#007bff',
@@ -42,12 +43,13 @@ const styles = StyleSheet.create({
     },
     digipetContainer: {
         alignItems: 'center',
-        marginBottom: 20,
+        marginTop: 50,
+        marginBottom: 100,
     },
     digipetImage: {
-        width: 250,
-        height: 250,
-        resizeMode: 'contain',
+        width: 300,
+        height: 300,
+        
     },
 
 
@@ -58,14 +60,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     inventoryOption: {
-        backgroundColor: '#f0f0f0',
+        backgroundColor: 'green',
         padding: 10,
         borderRadius: 5,
-        width: '45%',
+        width: '50%',
     },
     inventoryOptionText: {
         textAlign: 'center',
-        color: '#333',
+        color: 'green',
     },
 
 

@@ -14,7 +14,7 @@ const HappinessBar = ({ happinessLevel }) => {
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
+        width: '80%',
         height: 20,
         backgroundColor: '#ddd',
         borderRadius: 10,
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     },
     bar: {
         height: '100%',
-        backgroundColor: '#ffcc00', // Adjust color as needed
+        backgroundColor: 'green',
         borderRadius: 10,
     },
 });

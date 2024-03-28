@@ -8,6 +8,7 @@ const stars = [
     require('../assets/images/star-happy.png'),
     require('../assets/images/star-dizzy.png'),
     require('../assets/images/star-dead.png'),
+    require('../assets/images/star-angry.png'),
 ];
 
 const Stars = (props) => {
